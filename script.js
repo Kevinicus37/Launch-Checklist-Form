@@ -5,18 +5,20 @@ window.addEventListener("load", function(){
    const fuelLevel = document.getElementById("fuelLevel");
    const cargoMass = document.getElementById("cargoMass");
    const form = document.querySelector("form");
+
    fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response){
       response.json().then(function(json){
-         target = document.getElementById("missionTarget");
+         let target = document.getElementById("missionTarget");
+         let planetIndex = Math.round(Math.random()*json.length);
          target.innerHTML = `<h2>Mission Destination</h2>
          <ol>
-            <li>Name: ${json[2].name}</li>
-            <li>Diameter: ${json[2].diameter}</li>
-            <li>Star: ${json[2].star}</li>
-            <li>Distance from Earth: ${json[2].distance}</li>
-            <li>Number of Moons: ${json[2].moons}</li>
+            <li>Name: ${json[planetIndex].name}</li>
+            <li>Diameter: ${json[planetIndex].diameter}</li>
+            <li>Star: ${json[planetIndex].star}</li>
+            <li>Distance from Earth: ${json[planetIndex].distance}</li>
+            <li>Number of Moons: ${json[planetIndex].moons}</li>
          </ol>
-         <img src="${json[2].image}">`
+         <img src="${json[planetIndex].image}">`
       })
    })
 
@@ -28,16 +30,20 @@ window.addEventListener("load", function(){
       } else {
          let status = document.getElementById("launchStatus");
          let readyToLaunch = true;
+         
          document.getElementById("pilotStatus").innerHTML = `Pilot ${pilot.value} is ready for launch.`;
          document.getElementById("copilotStatus").innerHTML = `Copilot ${copilot.value} is ready for launch.`;
+         
          if (Number(fuelLevel.value) < 10000){
             document.getElementById("fuelStatus").innerHTML = `There is not enough fuel for this journey!`;
             readyToLaunch = false;
          }
+
          if (Number(cargoMass.value) > 10000){
             readyToLaunch = false;
             document.getElementById("cargoStatus").innerHTML = `There is too much mass for the shuttle to take off.`;
          }
+         
          if (!readyToLaunch){
             status.innerHTML = `Shuttle not ready for launch!`;
             status.style.color = "red";
@@ -47,9 +53,7 @@ window.addEventListener("load", function(){
             status.innerHTML = "Shuttle is ready for launch!";
          }
       }
-      event.preventDefault();
-         
-      
+      event.preventDefault();      
    });
 })
 
